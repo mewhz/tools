@@ -1,11 +1,30 @@
 import re
 import datetime
 import os
+import sys
 
 content = open('HostReport.html', encoding='utf8').read()
 
-current_year_month_day = datetime.datetime.now().strftime('%Y-%m-%d')
-current_hour_minuter_second = datetime.datetime.now().strftime('%H:%M:%S')
+args = sys.argv
+
+current_year_month_day = ''
+current_hour_minuter_second = ''
+
+if len(args) != 3:
+    current_year_month_day = datetime.datetime.now().strftime('%Y-%m-%d')
+    current_hour_minuter_second = datetime.datetime.now().strftime('%H:%M:%S')
+
+    print("使用系统当前时间: " + current_year_month_day + " " + current_hour_minuter_second)
+
+else:
+    try:
+        current_year_month_day = datetime.datetime.strptime(args[1], '%Y-%m-%d').strftime('%Y-%m-%d')
+        current_hour_minuter_second = datetime.datetime.strptime(args[2], '%H:%M:%S').strftime('%H:%M:%S')
+        print("使用自定义时间：" + current_year_month_day + " " + current_hour_minuter_second)
+    except ValueError:
+        current_year_month_day = datetime.datetime.now().strftime('%Y-%m-%d')
+        current_hour_minuter_second = datetime.datetime.now().strftime('%H:%M:%S')
+        print("输入的时间格式有误, 改为使用系统当前时间：" + current_year_month_day + " " + current_hour_minuter_second)
 
 scan_time = ()
 
@@ -65,11 +84,10 @@ def update_scan_time(contents):
 
 init()
 
-current_date = datetime.datetime.now().strftime('%Y-%m-%d')
 
 evaluate_time = re.findall(evaluate_time_regex, content)[0]
 evaluate_time_old_string = "<td class='text-right'>评估时间：</td><td class='text-left'>" + evaluate_time + "</td></tr>"
-evaluate_time_new_string = "<td class='text-right'>评估时间：</td><td class='text-left'>" + current_date + "</td></tr>"
+evaluate_time_new_string = "<td class='text-right'>评估时间：</td><td class='text-left'>" + current_year_month_day + "</td></tr>"
 
 content = content.replace(evaluate_time_old_string, evaluate_time_new_string)
 
