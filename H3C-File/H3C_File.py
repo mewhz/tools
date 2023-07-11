@@ -38,6 +38,8 @@ scan_time_regex = "<tr><th style='width:20%' class='text-center header-font'>扫
 
 scan_hour_minuter_second_regex = "(.*?)小时(.*?)分(.*?)秒"
 
+scan_day_hour_minuter_second_regex = "(.*?)天(.*?)小时(.*?)分(.*?)秒"
+
 evaluate_time_regex = "<td class='text-right'>评估时间：</td><td class='text-left'>(.*?)</td></tr>"
 
 task_name_regex = "<tr><th style='width:20%' class='text-center header-font'>任务名称</th><td class='text-left " \
@@ -54,10 +56,18 @@ def init():
     global scan_time, start_scan_time_string
 
     scan_time_string = re.findall(scan_time_regex, content)[0]
-    scan_time = re.findall(scan_hour_minuter_second_regex, scan_time_string)[0]
 
-    scan_time_timedelta = datetime.timedelta(hours=int(scan_time[0]), minutes=int(scan_time[1]),
-                                             seconds=int(scan_time[2]))
+    if scan_time_string.find("天") != -1:
+        scan_time = re.findall(scan_day_hour_minuter_second_regex, scan_time_string)[0]
+    else:
+        scan_time = re.findall(scan_hour_minuter_second_regex, scan_time_string)[0]
+
+    if len(scan_time) == 3:
+        scan_time_timedelta = datetime.timedelta(hours=int(scan_time[0]), minutes=int(scan_time[1]),
+                                                 seconds=int(scan_time[2]))
+    else:
+        scan_time_timedelta = datetime.timedelta(days=int(scan_time[0]), hours=int(scan_time[1]),
+                                                 minutes=int(scan_time[2]), seconds=int(scan_time[3]))
 
     start_scan_time_string = start_scan_time_string - scan_time_timedelta
 
