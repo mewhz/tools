@@ -1,7 +1,5 @@
 ## 简介
 
----
-
 把该脚本放在 H3C 漏扫工具导出的 HTML 报告中的目录下，和 HostReport.html 文件、target 文件夹在同一目录中，命令行输入：
 
 ```python
