@@ -80,17 +80,17 @@
     document.body.appendChild(backToTopBtn);
     document.body.appendChild(nextBtn);
 
-    // window.addEventListener('scroll', () => {
-    //     if (document.documentElement.scrollTop > 200 || document.body.scrollTop > 200) {
-    //         prevBtn.style.display = 'block';
-    //         backToTopBtn.style.display = 'block';
-    //         nextBtn.style.display = 'block';
-    //     } else {
-    //         prevBtn.style.display = 'none';
-    //         backToTopBtn.style.display = 'none';
-    //         nextBtn.style.display = 'none';
-    //     }
-    // });
+    window.addEventListener('scroll', () => {
+        if (document.documentElement.scrollTop > 200 || document.body.scrollTop > 200) {
+            prevBtn.style.display = 'block';
+            backToTopBtn.style.display = 'block';
+            nextBtn.style.display = 'block';
+        } else {
+            prevBtn.style.display = 'none';
+            backToTopBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        }
+    });
 
     backToTopBtn.addEventListener('click', () => {
         window.scrollTo({
