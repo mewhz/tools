@@ -4,8 +4,8 @@
 
 [GitHub-Random-Star](./GitHub-Random-Star/index.js)
 
-### Bangumi 章节讨论回到顶部
+### Bangumi 章节讨论跳转按钮
 
-翻阅 Bangumi 的章节讨论时，想要看下一集需要回到顶部才可以，但是 Bangumi 本身不支持，于是编写该脚本。
+翻阅 Bangumi 的章节讨论时，在底部增加快速跳转上一章、下一章和回到顶部按钮。
 
-[Bangumi-Ep-Back-Top](./Bangumi-Ep-Back-Top/index.js)
+[Bangumi-Ep-Jump](./Bangumi-Ep-Jump/index.js)
