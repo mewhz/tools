@@ -6,6 +6,6 @@
 
 ### Bangumi 章节讨论跳转按钮
 
-翻阅 Bangumi 的章节讨论时，在底部增加快速跳转上一章、下一章和回到顶部按钮。
+Bangumi 影评底部增加快速切换上下章节、返回顶部和标记看过本集。
 
-[Bangumi-Ep-Jump](./Bangumi-Ep-Jump/index.js)
+[Bangumi-Better](./Bangumi-Better/index.js)
