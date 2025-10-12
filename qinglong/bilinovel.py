@@ -38,6 +38,8 @@ headers = {
 
 book_list = []
 
+email_title = ""
+
 def send_email():
     # 创建邮件内容
     message = MIMEMultipart()
@@ -87,6 +89,8 @@ def get_integral():
 # 获取图书列表
 def get_book_update():
 
+    global email_title
+
     response = requests.get(book_url, headers=headers)
 
     content = response.text
@@ -109,6 +113,8 @@ def get_book_update():
             if update_time == yesterday:
 
                 book_list.append(title)
+
+                email_title = email_title + title + " "
 
     if len(book_list) > 0:
         send_email()

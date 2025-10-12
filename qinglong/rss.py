@@ -10,7 +10,7 @@ from email.header import Header
 import json
 
 # 蜜柑计划 RSS 订阅地址
-mikanani_rss_url = ""
+mikanani_rss_url = []
 # 大橘猫和朋友们周刊 RSS 订阅地址
 rrorangeandfriends_rss_url = ""
 
@@ -19,6 +19,7 @@ rrorangeandfriends_update_time = os.getenv("rrorangeandfriends_update_time")
 # 大橘猫和朋友们周刊最后一次更新时间，设置环境变量
 mikanani_update_time = os.getenv("mikanani_update_time")
 
+email_title = ""
 email_content = ""
 
 # qinglong 的 client_id
@@ -42,14 +43,24 @@ smtp_port = 587  # 或者465(SSL)
 def init():
     rrorangeandfriends_rss_response = requests.get(rrorangeandfriends_rss_url).text
 
-    mikanani_rss_rss_response = requests.get(mikanani_rss_url).text
+    mikanani_rss_response = []
+
+    for url in mikanani_rss_url:
+        mikanani_rss_response.append(requests.get(url).text)
 
     rrorangeandfriends_rss_dict = xmltodict.parse(rrorangeandfriends_rss_response)
-    mikanani_rss_dict = xmltodict.parse(mikanani_rss_rss_response)
+
+    mikanani_rss_dict = []
+
+    for response in mikanani_rss_response:
+        mikanani_rss_dict.append(xmltodict.parse(response))
 
     print("=== 获取 RSS 完成 ===")
 
-    mikanani(mikanani_rss_dict)
+
+    for mikanani_rss in mikanani_rss_dict:
+        mikanani(mikanani_rss)
+
     rrorangeandfriends(rrorangeandfriends_rss_dict)
 
     print("=== 开始更新环境变量 ===")
@@ -70,6 +81,7 @@ def mikanani(rss_dict):
 
     # 声明使用全局变量
     global email_content
+    global email_title
     global mikanani_update_time
 
     rss_items = rss_dict['rss']['channel']['item']
@@ -84,9 +96,12 @@ def mikanani(rss_dict):
         # 若获取的时间晚于更新时间
         if pub_date > mikanani_update_time:
             email_content += f"{title} {pub_date}\n"
+            if rss_dict['rss']['channel']['title'] is not None:
+                temp = rss_dict['rss']['channel']['title'].replace("Mikan Project - ", "")
+                if email_title.find(temp) == -1:
+                    email_title = email_title + temp.replace("Mikan Project - ", "") + " "
             if max_time == "":
                 max_time = pub_date
-            # print(title, pub_date)
 
     if max_time != "":
         mikanani_update_time = max_time
@@ -99,6 +114,7 @@ def rrorangeandfriends(rss_dict):
 
     # 声明使用全局变量
     global email_content
+    global email_title
     global rrorangeandfriends_update_time
 
     rss_items = rss_dict['rss']['channel']['item']
@@ -114,7 +130,6 @@ def rrorangeandfriends(rss_dict):
             email_content += f"{title} {pub_date}\n"
             if max_time == "":
                 max_time = pub_date
-            # print(title, pub_date)
 
     if max_time != "":
         rrorangeandfriends_update_time = max_time
@@ -159,13 +174,14 @@ def update_env():
 
     if json.loads(response)['code'] == 200:
         print("=== mikanani 时间更新成功 ===")
+        # email_content += "mikanani 时间更新成功\n"
 
 def send_email():
     # 创建邮件内容
     message = MIMEMultipart()
     message['From'] = Header(sender)
     message['To'] = Header(receiver)
-    message['Subject'] = Header('收藏的 RSS 更新啦！', 'utf-8')
+    message['Subject'] = Header(email_title + "RSS 更新啦！", 'utf-8')
 
     # 邮件正文
     message.attach(MIMEText(email_content, 'plain', 'utf-8'))
