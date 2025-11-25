@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bangumi Better
 // @namespace    http://tampermonkey.net/
-// @version      1.2.0
+// @version      1.2.1
 // @description  Bangumi 影评底部增加快速切换上下章节、返回顶部和标记看过本集
 // @author       mewhz
 // @match        https://bangumi.tv/ep/*
@@ -38,6 +38,9 @@
         }, 2000);
 
     }
+
+    // 隐藏侧栏
+    document.querySelector('.column-side').style.display = 'none';
 
     const epId = window.location.href.match(/\d+/)[0];
     const singleList = document.getElementById('badgeUserPanel').getElementsByClassName('single');
